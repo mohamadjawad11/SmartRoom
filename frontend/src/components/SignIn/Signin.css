@@ -1,69 +1,97 @@
-/* Center the entire screen */
-.login-container {
+.login-wrapper {
   height: 100vh;
   width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f0f2f5;
+  background: #f4f7fa;
+  padding: 0; /* ensure no spacing around */
+  margin: 0;
 }
 
-/* Style the login card */
 .login-card {
-  background-color: white;
-  padding: 2rem;
-  border-radius: 16px;
+  display: flex;
+  width: 900px;
+  height: 550px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
+  border-radius: 16px;
+  overflow: hidden;
+  background-color: #fff;
+  padding: 0; /* remove internal space */
+  margin: 0;  /* ensure centering */
 }
 
-/* Headline */
-.login-card h2 {
-  margin-bottom: 1.5rem;
+
+.login-left {
+  flex: 1;
+  background-color: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-left img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.login-right {
+  flex: 1;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-right h2 {
+  margin-bottom: 0.5rem;
   color: #333;
-  font-size: 1.8rem;
+  font-size: 2rem;
 }
 
-/* Inputs */
-.login-card input {
-  width: 100%;
-  padding: 0.75rem;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
+.login-right .subtext {
+  margin-bottom: 2rem;
+  color: #666;
   font-size: 1rem;
 }
 
-/* Main login button */
-.login-card button[type="submit"] {
+.input-icon {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.input-icon input {
+  width: 90%;
+  padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.input-icon .icon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  transform: translateY(-50%);
+  color: #888;
+  font-size: 1.2rem;
+}
+
+button[type="submit"] {
   width: 100%;
   padding: 0.75rem;
-  background-color: #007bff;
+  background-color: #00b894;
   color: white;
   font-weight: bold;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   font-size: 1rem;
-  margin-top: 0.5rem;
-}
-
-.login-card button[type="submit"]:hover {
-  background-color: #0056b3;
-}
-
-/* Admin redirect button */
-.admin-redirect {
-  margin-top: 1rem;
-}
-
-.admin-redirect button {
-  background: none;
-  color: #007bff;
-  border: none;
   cursor: pointer;
-  text-decoration: underline;
-  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #009f7a;
 }
