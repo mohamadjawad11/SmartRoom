@@ -3,10 +3,13 @@ import "./Signin.css";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FiMail, FiLock } from "react-icons/fi";
-import loginimage from  '../../assets/images/login.avif';
+import loginimage from '../../assets/images/login.avif';
+import { useDispatch } from 'react-redux';
+import { signInSuccess } from  '../../redux/userSlice';
 
 const Signin = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -25,13 +28,22 @@ const Signin = () => {
 
     try {
       const res = await axios.post("http://localhost:5091/api/auth/login", formData);
-      const role = res.data.user.role;
+      const { token, user } = res.data;
 
-      if (role === "Admin") {
+      // ✅ Save token to localStorage
+      localStorage.setItem("token", token);
+
+      // ✅ Save user info + token to Redux
+      dispatch(signInSuccess({ ...user, token }));
+
+      // ✅ Redirect based on role
+      if (user.role === "Admin") {
         navigate("/admin-home");
       } else {
-        alert("login successful");
+        alert("Login successful");
+        // You can also redirect to home if needed: navigate("/");
       }
+
     } catch (err) {
       alert("Login failed: " + (err.response?.data?.message || "Server error"));
     }

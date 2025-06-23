@@ -162,3 +162,4 @@ C:\Users\jawad\OneDrive\Desktop\SmartRoom\backend\WebApi\obj\Debug\net9.0\refint
 C:\Users\jawad\OneDrive\Desktop\SmartRoom\backend\WebApi\obj\Debug\net9.0\WebApi.pdb
 C:\Users\jawad\OneDrive\Desktop\SmartRoom\backend\WebApi\obj\Debug\net9.0\WebApi.genruntimeconfig.cache
 C:\Users\jawad\OneDrive\Desktop\SmartRoom\backend\WebApi\obj\Debug\net9.0\ref\WebApi.dll
+C:\Users\jawad\OneDrive\Desktop\SmartRoom\backend\webApi\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
