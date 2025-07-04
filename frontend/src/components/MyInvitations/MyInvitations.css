@@ -1,0 +1,99 @@
+.invitations-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f7fb;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.invitations-content {
+  flex-grow: 1;
+  padding: 40px;
+}
+
+.invitations-content h2 {
+  margin-bottom: 30px;
+  font-size: 26px;
+  color: #333;
+}
+
+.invitations-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.invitations-table th,
+.invitations-table td {
+  padding: 14px 18px;
+  text-align: left;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.invitations-table th {
+  background-color: #f1f4f9;
+  color: #555;
+  font-weight: 600;
+}
+
+.invitations-table td {
+  color: #333;
+}
+
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-badge.pending {
+  background-color: #fff7d6;
+  color: #b08900;
+  border: 1px solid #e0c96f;
+}
+
+.status-badge.accepted {
+  background-color: #d1f7e0;
+  color: #2d8659;
+  border: 1px solid #88d2aa;
+}
+
+.status-badge.rejected {
+  background-color: #fce2e2;
+  color: #d63447;
+  border: 1px solid #f1a1a1;
+}
+
+.accept-btn,
+.reject-btn {
+  padding: 6px 14px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.accept-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.accept-btn:hover {
+  background-color: #45a045;
+}
+
+.reject-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.reject-btn:hover {
+  background-color: #d7332c;
+}

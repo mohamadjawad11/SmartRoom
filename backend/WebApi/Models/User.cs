@@ -7,5 +7,7 @@ namespace WebApi.Models
         public string Email { get; set; }         // Unique login field
         public string Password { get; set; }      // Will be hashed later
         public string Role { get; set; }          // "Admin" or "Employee"
+
+        public List<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }

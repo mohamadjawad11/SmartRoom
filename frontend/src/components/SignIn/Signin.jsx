@@ -41,7 +41,7 @@ const Signin = () => {
         navigate("/admin-home");
       } else {
         alert("Login successful");
-        // You can also redirect to home if needed: navigate("/");
+        navigate('/profile');
       }
 
     } catch (err) {

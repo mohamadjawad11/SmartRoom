@@ -1,0 +1,126 @@
+.page-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+}
+
+.sidebar-container {
+  width: 250px;
+  background-color: #ffffff;
+  border-right: 1px solid #ddd;
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px;
+}
+
+.bookings-section {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.section-title {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bookings-table th,
+.bookings-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  color: white;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status-badge.pending {
+  background-color: orange;
+}
+
+.status-badge.approved {
+  background-color: green;
+}
+
+.status-badge.rejected {
+  background-color: red;
+}
+
+.attendee-toggle {
+  padding: 6px 12px;
+  background-color: #0077cc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.attendee-toggle:hover{
+  background-color: #33a3f3;
+  transition: 0.5s;
+}
+
+.attendee-list {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 8px;
+}
+
+.attendee-list li {
+  margin-bottom: 5px;
+}
+
+.attendee-badge {
+  padding: 2px 8px;
+  margin-left: 5px;
+  border-radius: 12px;
+  font-size: 0.75em;
+  color: white;
+}
+
+.attendee-badge.pending {
+  background-color: orange;
+}
+
+.attendee-badge.accepted {
+  background-color: green;
+}
+
+.attendee-badge.declined {
+  background-color: red;
+}
+
+.attendees-row td {
+  background-color: #f9f9f9;
+}
+
+.invite-btn {
+  background-color: #0d8e38;
+  color: white;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-left: 5px;
+}
+
+.invite-btn:hover {
+  background-color: #20d34d;
+}

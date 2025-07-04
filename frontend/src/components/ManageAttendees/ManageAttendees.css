@@ -1,0 +1,57 @@
+.manage-page {
+  display: flex;
+}
+
+.manage-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.invite-form {
+  margin-bottom: 20px;
+}
+
+.invite-form input {
+  padding: 8px;
+  margin-right: 10px;
+  width: 200px;
+}
+
+.invite-form button {
+  padding: 8px 16px;
+  background-color: #009688;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.attendees-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.attendees-table th,
+.attendees-table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status-badge.pending {
+  background-color: #ffc107;
+}
+.status-badge.accepted {
+  background-color: #4caf50;
+}
+.status-badge.rejected {
+  background-color: #f44336;
+}
