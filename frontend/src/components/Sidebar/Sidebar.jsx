@@ -154,6 +154,12 @@ export default function Sidebar() {
           Meetings
         </NavLink>
 
+        <NavLink to="/view-rooms" activeclassname="active">
+          <FiBookOpen className="icon" />
+          View Rooms
+        </NavLink>
+
+
         {/* ✅ My Invitations for all users */}
         <NavLink to="/my-invitations" activeclassname="active">
           <FiInbox className="icon" />

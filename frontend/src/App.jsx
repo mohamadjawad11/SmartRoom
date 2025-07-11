@@ -46,6 +46,7 @@ import BookingForm from "./components/BookingForm/BookingForm.jsx";
 import Bookings from "./components/Booking/Bookings.jsx";
 import ManageAttendees from "./components/ManageAttendees/ManageAttendees.jsx";
 import MyInvitations from "./components/MyInvitations/MyInvitations.jsx";
+import ViewRooms from "./components/ViewRooms/ViewRooms.jsx";
 
 function App() {
   return (
@@ -58,7 +59,8 @@ function App() {
         <Route path="/book-room" element={<BookingForm />} />
         <Route path="/bookings" element={<Bookings />} />
         <Route path="/manage-attendees/:bookingId" element={<ManageAttendees />} />
-        <Route path="/my-invitations" element={<MyInvitations />} /> 
+        <Route path="/my-invitations" element={<MyInvitations />} />
+        <Route path="/view-rooms" element={<ViewRooms />} />
       </Routes>
     </Router>
   );
