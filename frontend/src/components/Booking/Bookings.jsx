@@ -4,6 +4,7 @@ import Sidebar from "../Sidebar/Sidebar.jsx";
 import toast from "react-hot-toast";
 import { jwtDecode } from "jwt-decode";
 import InviteModal from "../InviteModal/InviteModal";
+import { useNavigate } from "react-router-dom";
 
 export default function Bookings() {
   const [bookings, setBookings] = useState([]);
@@ -12,23 +13,25 @@ export default function Bookings() {
   const [showModal, setShowModal] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState(null);
 
- useEffect(() => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    const decoded = jwtDecode(token);
-    console.log("Decoded token:", decoded);
+  // Confirmation modal for delete
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [bookingToDelete, setBookingToDelete] = useState(null);
 
-    const userId =
-      decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+  const navigate = useNavigate();
 
-    if (userId) {
-      setCurrentUserId(Number(userId));
-    } else {
-      console.warn("User ID not found in token:", decoded);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode(token);
+      const userId =
+        decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+      if (userId) {
+        setCurrentUserId(Number(userId));
+      } else {
+        console.warn("User ID not found in token:", decoded);
+      }
     }
-  }
-}, []);
-
+  }, []);
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -41,7 +44,6 @@ export default function Bookings() {
         });
         const data = await res.json();
         setBookings(data);
-        
       } catch (err) {
         toast.error("Failed to load bookings.");
         console.error(err);
@@ -57,6 +59,38 @@ export default function Bookings() {
   const handleOpenInvite = (bookingId) => {
     setSelectedBookingId(bookingId);
     setShowModal(true);
+  };
+
+  const requestDeleteBooking = (bookingId) => {
+    setBookingToDelete(bookingId);
+    setShowConfirmModal(true);
+  };
+
+  const confirmDeleteBooking = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:5091/api/Booking/${bookingToDelete}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        toast.success("Booking deleted!");
+        setBookings((prev) => prev.filter((b) => b.id !== bookingToDelete));
+      } else {
+        toast.error(result.message || "Delete failed.");
+      }
+    } catch (err) {
+      toast.error("Server error.");
+      console.error(err);
+    }
+
+    setShowConfirmModal(false);
+    setBookingToDelete(null);
   };
 
   return (
@@ -77,77 +111,121 @@ export default function Bookings() {
                 <th>Purpose</th>
                 <th>Status</th>
                 <th>Attendees</th>
-                <th>Actions</th>
+                <th>Invite</th>
+                <th>Modify</th>
+                <th>Delete</th>
               </tr>
             </thead>
             <tbody>
-      {bookings.map((b) => {
-  console.log("booking userId:", b.userId, "current userId:", currentUserId);
-  return (
-    <React.Fragment key={b.id}>
-      <tr>
-        <td>{b.roomName}</td>
-        <td>{b.roomLocation}</td>
-        <td>{new Date(b.startTime).toLocaleString()}</td>
-        <td>{new Date(b.endTime).toLocaleString()}</td>
-        <td>{b.purpose}</td>
-        <td>
-          <span className={`status-badge ${b.status.toLowerCase()}`}>
-            {b.status}
-          </span>
-        </td>
-        <td>
-          <button
-            className="attendee-toggle"
-            onClick={() => toggleAttendees(b.id)}
-          >
-            {expandedBookingId === b.id ? "Hide" : "View"}
-          </button>
-        </td>
-        <td>
-          {b.userId === currentUserId && (
-            <button
-              onClick={() => handleOpenInvite(b.id)}
-              className="invite-btn"
-            >
-              Invite
-            </button>
-          )}
-        </td>
-      </tr>
-      {expandedBookingId === b.id && (
-        <tr className="attendees-row">
-          <td colSpan="8">
-            {!b.attendees || b.attendees.length === 0 ? (
-              <p>No attendees yet.</p>
-            ) : (
-              <ul className="attendee-list">
-                {b.attendees.map((a) => (
-                  <li key={a.userId}>
-                    {a.username} —{" "}
-                    <span className={`attendee-badge ${a.status.toLowerCase()}`}>
-                      {a.status}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </td>
-        </tr>
-      )}
-    </React.Fragment>
-  );
-})}
-
+              {bookings.map((b) => (
+                <React.Fragment key={b.id}>
+                  <tr>
+                    <td>{b.roomName}</td>
+                    <td>{b.roomLocation}</td>
+                    <td>{new Date(b.startTime).toLocaleString()}</td>
+                    <td>{new Date(b.endTime).toLocaleString()}</td>
+                    <td>{b.purpose}</td>
+                    <td>
+                      <span className={`status-badge ${b.status.toLowerCase()}`}>
+                        {b.status}
+                      </span>
+                    </td>
+                    <td>
+                      <button
+                        className="attendee-toggle"
+                        onClick={() => toggleAttendees(b.id)}
+                      >
+                        {expandedBookingId === b.id ? "Hide" : "View"}
+                      </button>
+                    </td>
+                    <td>
+                      {b.userId === currentUserId && (
+                        <button
+                          onClick={() => handleOpenInvite(b.id)}
+                          className="invite-btn"
+                        >
+                          Invite
+                        </button>
+                      )}
+                    </td>
+                    <td>
+                      {b.userId === currentUserId && (
+                        <button
+                          onClick={() => navigate(`/modify-booking/${b.id}`)}
+                          className="modify-btn"
+                          style={{ backgroundColor: "#ffc107", color: "black" }}
+                        >
+                          Modify
+                        </button>
+                      )}
+                    </td>
+                    <td>
+                      {b.userId === currentUserId && (
+                        <button
+                          onClick={() => requestDeleteBooking(b.id)}
+                          className="delete-btn"
+                          style={{ backgroundColor: "#dc3545", color: "white" }}
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                  {expandedBookingId === b.id && (
+                    <tr className="attendees-row">
+                      <td colSpan="10">
+                        {!b.attendees || b.attendees.length === 0 ? (
+                          <p>No attendees yet.</p>
+                        ) : (
+                          <ul className="attendee-list">
+                            {b.attendees.map((a) => (
+                              <li key={a.userId}>
+                                {a.username} —{" "}
+                                <span
+                                  className={`attendee-badge ${a.status.toLowerCase()}`}
+                                >
+                                  {a.status}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Invite Modal */}
       {showModal && (
         <InviteModal
           bookingId={selectedBookingId}
           onClose={() => setShowModal(false)}
         />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {showConfirmModal && (
+        <div className="confirm-overlay">
+          <div className="confirm-box">
+            <p>Are you sure you want to delete this booking?</p>
+            <div className="confirm-buttons">
+              <button onClick={confirmDeleteBooking} className="confirm-yes">
+                Yes, Delete
+              </button>
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="confirm-no"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

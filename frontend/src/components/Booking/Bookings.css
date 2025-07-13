@@ -112,15 +112,72 @@
 .invite-btn {
   background-color: #0d8e38;
   color: white;
-  padding: 6px 10px;
   border: none;
   border-radius: 5px;
   font-size: 14px;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin-left: 5px;
+  
+  
 }
 
 .invite-btn:hover {
   background-color: #20d34d;
+}
+
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirm-box {
+  background-color: white;
+  padding: 20px 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.confirm-buttons {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.confirm-yes {
+  background-color: #dc3545;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+}
+
+.confirm-no {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+}
+
+.modify-btn,.delete-btn,.invite-btn{
+  padding: 8px 10px;
+  border: none;
+}
+
+.modify-btn:hover{
+  opacity: 0.8;
+}
+
+.delete-btn:hover{
+  opacity: 0.8;
 }

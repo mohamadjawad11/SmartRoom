@@ -59,40 +59,40 @@ namespace WebApi.Controllers
 
         [Authorize]
         [HttpGet]
-      
-[HttpGet]
-public async Task<IActionResult> GetUserBookings()
-{
-    var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-    var bookings = await _context.Bookings
-        .Where(b => b.UserId == userId)
-        .Include(b => b.Room)
-        .Include(b => b.Attendees)
-            .ThenInclude(ma => ma.User)
-       .Select(b => new BookingResponseDto
-{
-    Id = b.Id,
-    RoomId = b.RoomId,
-    RoomName = b.Room.Name,
-    RoomLocation = b.Room.Location,
-    StartTime = b.StartTime,
-    EndTime = b.EndTime,
-    Purpose = b.Purpose,
-    Status = b.Status,
+        [HttpGet]
+        public async Task<IActionResult> GetUserBookings()
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-    UserId = b.UserId, // ✅ Include this line
+            var bookings = await _context.Bookings
+                .Where(b => b.UserId == userId)
+                .Include(b => b.Room)
+                .Include(b => b.Attendees)
+                    .ThenInclude(ma => ma.User)
+               .Select(b => new BookingResponseDto
+               {
+                   Id = b.Id,
+                   RoomId = b.RoomId,
+                   RoomName = b.Room.Name,
+                   RoomLocation = b.Room.Location,
+                   StartTime = b.StartTime,
+                   EndTime = b.EndTime,
+                   Purpose = b.Purpose,
+                   Status = b.Status,
 
-    Attendees = b.Attendees.Select(a => new AttendeeDto
-    {
-        UserId = a.UserId,
-        Username = a.User.Username,
-        Status = a.Status
-    }).ToList()
-}).ToListAsync();
+                   UserId = b.UserId, // ✅ Include this line
 
-    return Ok(bookings);
-}
+                   Attendees = b.Attendees.Select(a => new AttendeeDto
+                   {
+                       UserId = a.UserId,
+                       Username = a.User.Username,
+                       Status = a.Status
+                   }).ToList()
+               }).ToListAsync();
+
+            return Ok(bookings);
+        }
 
         [Authorize(Roles = "Admin")]
         [HttpGet("all")]
@@ -116,6 +116,61 @@ public async Task<IActionResult> GetUserBookings()
             return Ok(bookings);
         }
 
-        
+        [Authorize]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBooking(int id)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var booking = await _context.Bookings.FindAsync(id);
+            if (booking == null)
+                return NotFound(new { message = "Booking not found." });
+
+            // Only the owner or Admin can delete
+            if (booking.UserId != userId && !User.IsInRole("Admin"))
+                return Forbid();
+
+            _context.Bookings.Remove(booking);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Booking deleted successfully." });
+        }
+
+    [Authorize]
+[HttpPut("{id}")]
+public async Task<IActionResult> UpdateBooking(int id, [FromBody] CreateBookingDto dto)
+{
+    var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+    var booking = await _context.Bookings.FindAsync(id);
+    if (booking == null)
+        return NotFound(new { message = "Booking not found." });
+
+    // Only the owner can update (or Admin)
+    if (booking.UserId != userId && !User.IsInRole("Admin"))
+        return Forbid();
+
+    // Check for conflicts (exclude current booking)
+    var hasConflict = await _context.Bookings
+        .AnyAsync(b => b.Id != id &&
+                       b.RoomId == dto.RoomId &&
+                       b.StartTime < dto.EndTime &&
+                       dto.StartTime < b.EndTime);
+    if (hasConflict)
+        return Conflict(new { message = "Room is already booked in this time range." });
+
+    booking.RoomId = dto.RoomId;
+    booking.StartTime = dto.StartTime;
+    booking.EndTime = dto.EndTime;
+    booking.Purpose = dto.Purpose;
+
+    await _context.SaveChangesAsync();
+
+    return Ok(new { message = "Booking updated successfully." });
+}
+
+
+
+
     }
 }
