@@ -68,11 +68,13 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  
 }
 
 .attendee-toggle:hover{
   background-color: #33a3f3;
   transition: 0.5s;
+  border: none;
 }
 
 .attendee-list {
