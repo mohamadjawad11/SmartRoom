@@ -70,6 +70,7 @@ export default function BookingForm() {
       } else {
         toast.error(result.message || "Booking failed.");
         setStatusMessage({ type: "error", text: result.message || "Booking failed." });
+                 
       }
     } catch (err) {
       toast.error("Server error. Please try again.");

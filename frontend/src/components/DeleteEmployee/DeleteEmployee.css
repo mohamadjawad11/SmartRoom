@@ -1,0 +1,125 @@
+/* DeleteEmployee.css */
+
+.delete-employee-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+}
+
+.delete-employee-form {
+  margin: auto;
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  width: 400px;
+}
+
+.delete-employee-form h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.delete-employee-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.delete-employee-form select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+.delete-employee-form button {
+  width: 100%;
+  background-color: #d9534f;
+  color: white;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-employee-form button:hover {
+  background-color: #c9302c;
+}
+
+.message {
+  margin-top: 15px;
+  text-align: center;
+  font-weight: 500;
+  color: #5cb85c;
+}
+
+.message.error {
+  color: #d9534f;
+}
+
+.confirm-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.confirm-box {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  width: 350px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.confirm-box p {
+  font-size: 18px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: space-around;
+}
+
+.confirm-yes {
+  background-color: #d9534f;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#confirm-no2 {
+  background-color: #6c757d;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.confirm-yes:hover {
+  background-color: #c9302c;
+}
+
+#confirm-no2:hover {
+  background-color: #5a6268;
+}

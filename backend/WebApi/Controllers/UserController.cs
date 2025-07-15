@@ -42,19 +42,19 @@ namespace WebApi.Controllers
         }
 
         [Authorize(Roles = "Admin,Employee")]
-[HttpGet]
-public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
-{
-    var users = await _context.Users
-        .Select(u => new UserDto
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
         {
-            Id = u.Id,
-            Username = u.Username
-        })
-        .ToListAsync();
+            var users = await _context.Users
+                .Select(u => new UserDto
+                {
+                    Id = u.Id,
+                    Username = u.Username
+                })
+                .ToListAsync();
 
-    return Ok(users);
-}
+            return Ok(users);
+        }
 
 
         // ✅ PUT /api/user/update-password
@@ -84,17 +84,81 @@ public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
         }
 
         [Authorize]
-[HttpGet("username/{username}")]
-public async Task<IActionResult> GetUserByUsername(string username)
+        [HttpGet("username/{username}")]
+        public async Task<IActionResult> GetUserByUsername(string username)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == username);
+
+            if (user == null)
+                return NotFound();
+
+            return Ok(new { id = user.Id, username = user.Username });
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> CreateUser([FromBody] RegisterDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (await _context.Users.AnyAsync(u => u.Username == dto.Username))
+                return BadRequest(new { message = "Username already exists." });
+
+            var user = new User
+            {
+                Username = dto.Username,
+                Email = dto.Email,
+                Password = dto.Password, // ❗ Consider hashing in real-world apps
+                Role = dto.Role
+            };
+
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Employee created successfully", userId = user.Id });
+        }
+
+
+[Authorize(Roles = "Admin")]
+[HttpPut("{id}")]
+public async Task<IActionResult> UpdateUser(int id, [FromBody] RegisterDto dto)
+{
+    var user = await _context.Users.FindAsync(id);
+    if (user == null)
+        return NotFound(new { message = "User not found." });
+
+    user.Username = dto.Username;
+    user.Email = dto.Email;
+    user.Password = dto.Password; // ❗ Again, hash if needed
+    user.Role = dto.Role;
+
+    await _context.SaveChangesAsync();
+    return Ok(new { message = "Employee updated successfully" });
+}
+
+[Authorize(Roles = "Admin")]
+[HttpDelete("by-username/{username}")]
+public async Task<IActionResult> DeleteUserByUsername(string username)
 {
     var user = await _context.Users
+        .Include(u => u.Bookings)
         .FirstOrDefaultAsync(u => u.Username == username);
 
     if (user == null)
-        return NotFound();
+        return NotFound(new { message = "User not found." });
 
-    return Ok(new { id = user.Id, username = user.Username });
+    // Remove references from MeetingAttendees
+    var attendees = _context.MeetingAttendees.Where(ma => ma.UserId == user.Id);
+    _context.MeetingAttendees.RemoveRange(attendees);
+
+    _context.Users.Remove(user);
+    await _context.SaveChangesAsync();
+
+    return Ok(new { message = "Employee deleted successfully" });
 }
+
 
     }
 }

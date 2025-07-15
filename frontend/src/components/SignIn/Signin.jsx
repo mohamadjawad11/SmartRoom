@@ -38,7 +38,7 @@ const Signin = () => {
 
       // ✅ Redirect based on role
       if (user.role === "Admin") {
-        navigate("/admin-home");
+        navigate("/profile");
       } else {
         alert("Login successful");
         navigate('/profile');

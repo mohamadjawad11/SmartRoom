@@ -1,0 +1,63 @@
+/* AddRoom.css */
+
+.add-room-page {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+}
+
+.add-room-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.add-room-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+  gap: 15px;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.add-room-form input,
+.add-room-form textarea {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.add-room-form textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.add-room-form button {
+  background-color: #007bff;
+  color: #ffffff;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.add-room-form button:hover {
+  background-color: #0056b3;
+}
+
+.message {
+  margin-top: 10px;
+  color: #007bff;
+  font-weight: bold;
+  text-align: center;
+}
