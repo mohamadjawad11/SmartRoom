@@ -230,3 +230,107 @@ export default function Bookings() {
     </div>
   );
 }
+
+// import React, { useState, useEffect } from "react";
+// import axios from "axios";
+// import { useSelector } from "react-redux"; // Assuming you use Redux to get the current user
+// import { useHistory } from "react-router-dom";
+
+// const Meetings = () => {
+//   const [createdMeetings, setCreatedMeetings] = useState([]);
+//   const [invitedMeetings, setInvitedMeetings] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState(null);
+
+//   const currentUser = useSelector((state) => state.user.currentUser); // Get current user from Redux
+
+//   const history = useHistory();
+
+//   // Fetch meetings when the component mounts
+//   useEffect(() => {
+//     const fetchMeetings = async () => {
+//       try {
+//         // Fetch meetings the user has been invited to
+//         const invitationsResponse = await axios.get("/api/meeting/my-invitations");
+//         setInvitedMeetings(invitationsResponse.data);
+
+//         // Fetch meetings the user has created
+//         const createdResponse = await axios.get("/api/booking/my-created-meetings");
+//         setCreatedMeetings(createdResponse.data);
+
+//         setLoading(false);
+//       } catch (error) {
+//         setError("Failed to load meetings");
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchMeetings();
+//   }, [currentUser.id]); // Refetch when user changes (optional)
+
+//   const handleJoinMeeting = async (bookingId) => {
+//     try {
+//       const response = await axios.post(`/api/meeting/join/${bookingId}`);
+//       alert("Successfully joined the meeting.");
+//       // Optionally, redirect to the meeting page or show meeting link
+//     } catch (error) {
+//       alert("Failed to join the meeting.");
+//     }
+//   };
+
+//   const handleStartMeeting = async (bookingId) => {
+//     try {
+//       const response = await axios.post(`/api/meeting/start/${bookingId}`);
+//       alert("Meeting started successfully.");
+//       // Optionally, redirect to the meeting room or update status
+//     } catch (error) {
+//       alert("Failed to start the meeting.");
+//     }
+//   };
+
+//   if (loading) {
+//     return <div>Loading...</div>;
+//   }
+
+//   if (error) {
+//     return <div>{error}</div>;
+//   }
+
+//   return (
+//     <div className="meetings-container">
+//       <h1>Meetings</h1>
+
+//       {/* Meetings the user has created */}
+//       <div className="meetings-list">
+//         <h2>Your Created Meetings</h2>
+//         {createdMeetings.length === 0 && <p>You have not created any meetings.</p>}
+//         {createdMeetings.map((meeting) => (
+//           <div className="meeting-card" key={meeting.Id}>
+//             <h3>{meeting.RoomName}</h3>
+//             <p>{meeting.Purpose}</p>
+//             <p>{meeting.StartTime} - {meeting.EndTime}</p>
+//             <p>{meeting.RoomLocation}</p>
+//             <button onClick={() => handleStartMeeting(meeting.Id)}>Start Meeting</button>
+//           </div>
+//         ))}
+//       </div>
+
+//       {/* Meetings the user is invited to */}
+//       <div className="meetings-list">
+//         <h2>Your Invitations</h2>
+//         {invitedMeetings.length === 0 && <p>You have no invitations.</p>}
+//         {invitedMeetings.map((meeting) => (
+//           <div className="meeting-card" key={meeting.Id}>
+//             <h3>{meeting.RoomName}</h3>
+//             <p>{meeting.Purpose}</p>
+//             <p>{meeting.StartTime} - {meeting.EndTime}</p>
+//             <p>{meeting.RoomLocation}</p>
+//             <button onClick={() => handleJoinMeeting(meeting.Id)}>Join Meeting</button>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Meetings;

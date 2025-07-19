@@ -23,6 +23,7 @@ import DeleteEmployee from "./components/DeleteEmployee/DeleteEmployee.jsx";
 import AddRoom from "./components/AddRoom/AddRoom.jsx";
 import UpdateRoom from "./components/UpdateRoom/UpdateRoom.jsx";
 import DeleteRoom from "./components/DeleteRoom/DeleteRoom.jsx";
+import Meeting from "./components/Meeting/Meeting.jsx";
 
 function App() {
   return (
@@ -45,6 +46,8 @@ function App() {
         <Route path="/add-room" element={<AddRoom />} />
         <Route path="/update-room" element={<UpdateRoom />} />
         <Route path="/delete-room" element={<DeleteRoom />} />
+        <Route path="/meetings" element={<Meeting />} />
+        
         
       </Routes>
     </Router>
@@ -52,3 +55,4 @@ function App() {
 }
 
 export default App;
+

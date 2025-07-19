@@ -88,16 +88,17 @@ namespace WebApi.Controllers
             return Ok(new { message = "Status updated successfully." });
         }
 
-        [Authorize]
+       [Authorize]
 [HttpGet("my-invitations")]
 public async Task<IActionResult> GetMyInvitations()
 {
     var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
     var invitations = await _context.MeetingAttendees
-        .Where(a => a.UserId == userId)
+        .Where(a => a.UserId == userId) // KEEP ALL including rejected
         .Include(a => a.Booking)
         .ThenInclude(b => b.Room)
+        .Include(a => a.Booking.User)
         .Select(a => new
         {
             a.Id,
@@ -114,6 +115,133 @@ public async Task<IActionResult> GetMyInvitations()
 
     return Ok(invitations);
 }
+
+[Authorize]
+[HttpGet("my-meetings")]
+public async Task<IActionResult> GetMeetingsICanJoin()
+{
+    var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+    var meetings = await _context.MeetingAttendees
+        .Where(a => a.UserId == userId && a.Status == "Accepted") // 👈 Filter only Accepted
+        .Include(a => a.Booking)
+        .ThenInclude(b => b.Room)
+        .Include(a => a.Booking.User)
+        .Select(a => new
+        {
+            a.Id,
+            a.Status,
+            BookingId = a.Booking.Id,
+            Room = a.Booking.Room.Name,
+            Location = a.Booking.Room.Location,
+            StartTime = a.Booking.StartTime,
+            EndTime = a.Booking.EndTime,
+            Purpose = a.Booking.Purpose,
+            OrganizerUsername = a.Booking.User.Username
+        })
+        .ToListAsync();
+
+    return Ok(meetings);
+}
+
+        /////----------------------------------------------------------////////////////////////////////
+
+        // Start a meeting (for the creator only)
+        [Authorize]
+        [HttpPost("start/{bookingId}")]
+        public async Task<IActionResult> StartMeeting(int bookingId)
+        {
+            var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            // Find the booking by ID
+            var booking = await _context.Bookings.FindAsync(bookingId);
+            if (booking == null)
+                return NotFound(new { message = "Booking not found." });
+
+            // Check if the current user is the creator (organizer) of the meeting
+            if (booking.UserId != currentUserId)
+                return Unauthorized(new { message = "You are not the organizer of this meeting." });
+
+            // Update the booking status to "In Progress"
+            booking.Status = "In Progress";
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Meeting started successfully." });
+        }
+
+        // // Join a meeting (for attendees only)
+        // [Authorize]
+        // [HttpPost("join/{bookingId}")]
+        // public async Task<IActionResult> JoinMeeting(int bookingId)
+        // {
+        //     var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        //     // Find the booking by ID
+        //     var booking = await _context.Bookings.FindAsync(bookingId);
+        //     if (booking == null)
+        //         return NotFound(new { message = "Booking not found." });
+
+        //     // Check if the current user is an attendee of the meeting
+        //     var attendee = await _context.MeetingAttendees
+        //         .FirstOrDefaultAsync(a => a.BookingId == bookingId && a.UserId == currentUserId);
+
+        //     if (attendee == null)
+        //         return Unauthorized(new { message = "You are not invited to this meeting." });
+
+        //     // Logic to provide a link to the meeting (this can be extended to an actual meeting link)
+        //     // For now, just return a success message with the meeting details
+        //     return Ok(new
+        //     {
+        //         message = "You can now join the meeting.",
+        //         meetingDetails = new
+        //         {
+        //             booking.Room.Name,
+        //             booking.StartTime,
+        //             booking.EndTime,
+        //             booking.Purpose
+        //         }
+        //     });
+        // }
+        [HttpPost("join/{bookingId}")]
+public async Task<IActionResult> JoinMeeting(int bookingId)
+{
+    var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+    Console.WriteLine($"CurrentUserId: {currentUserId}");
+    Console.WriteLine($"BookingId: {bookingId}");
+
+    var booking = await _context.Bookings
+        .Include(b => b.Room)
+        .Include(b => b.Attendees)
+        .FirstOrDefaultAsync(b => b.Id == bookingId);
+
+    if (booking == null)
+        return NotFound(new { message = "Booking not found." });
+
+    // ✅ Allow access if creator or attendee
+    if (booking.UserId != currentUserId)
+    {
+        var isAttendee = booking.Attendees.Any(a => a.UserId == currentUserId);
+        if (!isAttendee)
+            return Unauthorized(new { message = "You are not invited to this meeting." });
+    }
+
+    return Ok(new
+    {
+        message = "You can now join the meeting.",
+        meetingDetails = new
+        {
+            Room = booking.Room.Name,
+            booking.StartTime,
+            booking.EndTime,
+            booking.Purpose
+        }
+    });
+}
+
+
+
+
+
 
     }
 }

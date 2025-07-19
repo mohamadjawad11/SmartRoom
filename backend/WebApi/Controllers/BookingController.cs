@@ -136,41 +136,80 @@ namespace WebApi.Controllers
             return Ok(new { message = "Booking deleted successfully." });
         }
 
-    [Authorize]
-[HttpPut("{id}")]
-public async Task<IActionResult> UpdateBooking(int id, [FromBody] CreateBookingDto dto)
-{
-    var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        [Authorize]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBooking(int id, [FromBody] CreateBookingDto dto)
+        {
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-    var booking = await _context.Bookings.FindAsync(id);
-    if (booking == null)
-        return NotFound(new { message = "Booking not found." });
+            var booking = await _context.Bookings.FindAsync(id);
+            if (booking == null)
+                return NotFound(new { message = "Booking not found." });
 
-    // Only the owner can update (or Admin)
-    if (booking.UserId != userId && !User.IsInRole("Admin"))
-        return Forbid();
+            // Only the owner can update (or Admin)
+            if (booking.UserId != userId && !User.IsInRole("Admin"))
+                return Forbid();
 
-    // Check for conflicts (exclude current booking)
-    var hasConflict = await _context.Bookings
-        .AnyAsync(b => b.Id != id &&
-                       b.RoomId == dto.RoomId &&
-                       b.StartTime < dto.EndTime &&
-                       dto.StartTime < b.EndTime);
-    if (hasConflict)
-        return Conflict(new { message = "Room is already booked in this time range." });
+            // Check for conflicts (exclude current booking)
+            var hasConflict = await _context.Bookings
+                .AnyAsync(b => b.Id != id &&
+                               b.RoomId == dto.RoomId &&
+                               b.StartTime < dto.EndTime &&
+                               dto.StartTime < b.EndTime);
+            if (hasConflict)
+                return Conflict(new { message = "Room is already booked in this time range." });
 
-    booking.RoomId = dto.RoomId;
-    booking.StartTime = dto.StartTime;
-    booking.EndTime = dto.EndTime;
-    booking.Purpose = dto.Purpose;
+            booking.RoomId = dto.RoomId;
+            booking.StartTime = dto.StartTime;
+            booking.EndTime = dto.EndTime;
+            booking.Purpose = dto.Purpose;
 
-    await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-    return Ok(new { message = "Booking updated successfully." });
-}
+            return Ok(new { message = "Booking updated successfully." });
+        }
 
+ [Authorize]
+        [HttpGet("my-created-meetings")]
+        public async Task<IActionResult> GetMyCreatedMeetings()
+        {
+            Response.Headers.Add("Cache-Control", "no-store, no-cache, must-revalidate");
 
+            var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            
+            // Fetch bookings where the current user is the creator (userId matches)
+            var createdMeetings = await _context.Bookings
+                .Where(b => b.UserId == userId)
+                .Include(b => b.Room)
+                .Include(b => b.Attendees)
+                .Select(b => new
+                {
+                    b.Id,
+                    b.Room.Name,
+                    b.Room.Location,
+                    b.StartTime,
+                    b.EndTime,
+                    b.Purpose,
+                    b.Status,
+                    Attendees = b.Attendees.Select(a => new
+                    {
+                        a.UserId,
+                        a.User.Username,
+                        a.Status
+                    }).ToList()
+                })
+                .ToListAsync();
 
+            // Log the data to verify if meetings are fetched correctly
+            Console.WriteLine($"Fetched {createdMeetings.Count} created meetings for user {userId}");
+
+            if (createdMeetings.Count == 0)
+            {
+                return Ok(new { message = "No meetings found." });
+            }
+
+            return Ok(createdMeetings);
+        }
 
     }
 }

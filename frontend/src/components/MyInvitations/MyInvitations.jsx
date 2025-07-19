@@ -71,7 +71,7 @@ export default function MyInvitations() {
                 <th>End</th>
                 <th>Purpose</th>
                 <th>Status</th>
-                <th>Actions</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
