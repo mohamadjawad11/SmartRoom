@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "../Sidebar/Sidebar";
 import "./UpdateRoom.css";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const UpdateRoom = () => {
   const [rooms, setRooms] = useState([]);
   const [selectedRoomId, setSelectedRoomId] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     capacity: "",
@@ -15,6 +17,7 @@ const UpdateRoom = () => {
     imagePath: ""
   });
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -53,19 +56,38 @@ const UpdateRoom = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!selectedRoomId) return;
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   if (!selectedRoomId) return;
 
-    try {
-      await axios.put(`http://localhost:5091/api/Room/${selectedRoomId}`, formData);
-      setMessage("Room updated successfully!");
-      Navigate('/view-rooms');
-    } catch (err) {
-      console.error("Failed to update room.", err);
-      setMessage("Error updating room.");
-    }
-  };
+  //   try {
+  //     await axios.put(`http://localhost:5091/api/Room/${selectedRoomId}`, formData);
+  //     setMessage("Room updated successfully!");
+  //     navigate('/view-rooms');
+  //   } catch (err) {
+  //     console.error("Failed to update room.", err);
+  //     setMessage("Error updating room.");
+  //   }
+  // };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true); // Start loading
+  try {
+    const token = localStorage.getItem('token');
+    await axios.put(`http://localhost:5091/api/Room/${selectedRoomId}`, formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    setMessage("Room updated successfully!");
+    navigate('/view-rooms');
+  } catch (error) {
+    console.error('Error updating room:', error);
+  } finally {
+    setLoading(false); // Stop loading
+  }
+};
+
 
   return (
     <div className="update-room-page">
@@ -121,7 +143,10 @@ const UpdateRoom = () => {
               value={formData.imagePath}
               onChange={handleChange}
             />
-            <button type="submit">Update Room</button>
+            <button type="submit" disabled={loading}>
+  {loading ? 'Updating...' : 'Update Room'}
+</button>
+
             {message && <p className="message">{message}</p>}
           </form>
         )}

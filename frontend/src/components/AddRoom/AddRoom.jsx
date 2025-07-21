@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../Sidebar/Sidebar';
 import './AddRoom.css';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 
 const AddRoom = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,8 @@ const AddRoom = () => {
 
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,14 +37,15 @@ const AddRoom = () => {
       console.log(response);
       setMessage('Room added successfully!');
       setFormData({ name: '', capacity: '', location: '', description: '', imagePath: '' });
-      Navigate('/view-rooms');
+      navigate('/view-rooms');
+
     } catch (error) {
       setMessage(error.response?.data?.message || 'Failed to add room.');
     } finally {
       setLoading(false);
     }
   };
-
+// uaps cyqo kpoc cytl
   return (
     <div className="add-room-page">
       <Sidebar />

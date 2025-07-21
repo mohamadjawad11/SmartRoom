@@ -63,7 +63,11 @@ const UpdateEmployee = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setMessage("Employee updated successfully.");
+      setTimeout(() => {
+        setMessage("Employee updated successfully.");
+        setFormData({ username: "", email: "", password: "", role: "Employee" });
+      }, 2000);
+      
     } catch (err) {
       console.error("Failed to update employee.", err);
       setMessage("Error updating employee.");

@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Sidebar from '../Sidebar/Sidebar';
 import './DeleteRoom.css';
+import { useNavigate } from 'react-router-dom';
 
 const DeleteRoom = () => {
   const [rooms, setRooms] = useState([]);
   const [selectedRoomId, setSelectedRoomId] = useState('');
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRooms = async () => {
@@ -36,6 +38,7 @@ const DeleteRoom = () => {
       setRooms(rooms.filter(room => room.id !== parseInt(selectedRoomId)));
       setSelectedRoomId('');
       setConfirmDelete(false);
+      navigate('/view-rooms');
     } catch (error) {
       setMessage(error.response?.data?.message || 'Failed to delete room.');
     }

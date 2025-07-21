@@ -23,6 +23,7 @@ export default function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
+        if (!currentUser || !currentUser.token) return;
         const res = await axios.get("http://localhost:5091/api/User/profile", {
           headers: {
             Authorization: `Bearer ${currentUser.token}`
