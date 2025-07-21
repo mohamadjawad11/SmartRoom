@@ -36,10 +36,14 @@ export default function Sidebar() {
       </div>
 
       <nav className="nav-links">
-        <NavLink to="/dashboard" activeclassname="active">
-          <FiGrid className="icon" />
-          Dashboard
-        </NavLink>
+       
+        {currentUser?.role === "Admin" && (
+         <NavLink to="/dashboard" activeclassname="active">
+            <FiUsers className="icon" />
+            Dashboard
+          </NavLink>
+
+        )}
         <NavLink to="/profile" activeclassname="active">
           <FiUser className="icon" />
           Profile
@@ -67,15 +71,6 @@ export default function Sidebar() {
         <NavLink to="/my-invitations" activeclassname="active">
           <FiInbox className="icon" />
           My Invitations
-        </NavLink>
-
-        <NavLink to="/mom" activeclassname="active">
-          <FiFileText className="icon" />
-          MoM
-        </NavLink>
-        <NavLink to="/reports" activeclassname="active">
-          <FiBarChart2 className="icon" />
-          Reports
         </NavLink>
 
         {currentUser?.role === "Admin" && (

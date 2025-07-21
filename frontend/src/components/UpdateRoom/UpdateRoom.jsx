@@ -84,7 +84,7 @@ const UpdateRoom = () => {
   } catch (error) {
     console.error('Error updating room:', error);
   } finally {
-    setLoading(false); // Stop loading
+    setLoading(false); 
   }
 };
 

@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/SignIn/Signin.jsx";
 import AdminLogin from "./components/AdminLogic/AdminLogic.jsx";
 import AdminHome from "./components/AdminHome/AdminHome.jsx";
+import Dashboard from "./components/Dashboard/Dashboard.jsx";
 
 // User-related
 import Profile from "./components/Profile/Profile.jsx";
@@ -47,6 +48,7 @@ function App() {
         <Route path="/update-room" element={<UpdateRoom />} />
         <Route path="/delete-room" element={<DeleteRoom />} />
         <Route path="/meetings" element={<Meeting />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         
         
       </Routes>

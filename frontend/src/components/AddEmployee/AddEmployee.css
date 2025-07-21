@@ -4,6 +4,7 @@
   display: flex;
   min-height: 100vh;
   background-color: #f7f9fc;
+  width: 1540px;
 }
 
 .main-content {
@@ -70,3 +71,19 @@
 .submit-btn:hover {
   background-color: #0056b3;
 }
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.success-message {
+  color: #0a8a0a;
+  background-color: #e6f9e6;
+  padding: 10px 15px;
+  border: 1px solid #a5d6a7;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+

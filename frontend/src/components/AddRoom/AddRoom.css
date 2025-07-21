@@ -4,6 +4,7 @@
   display: flex;
   min-height: 100vh;
   background-color: #f4f6f8;
+  width: 1530px;
 }
 
 .add-room-container {

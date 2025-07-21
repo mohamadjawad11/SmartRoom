@@ -12,6 +12,10 @@ export default function AddEmployee() {
     password: "",
     role: "Employee",
   });
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+
+
  
 
   const handleChange = (e) => {
@@ -21,6 +25,7 @@ export default function AddEmployee() {
 
   const handleSubmit = async (e) => {
   e.preventDefault();
+  setLoading(true);
 
   try {
     const token = localStorage.getItem("token");
@@ -37,11 +42,14 @@ export default function AddEmployee() {
     );
 
     toast.success(response.data.message || "Employee added successfully!");
+    setTimeout(() => setSuccessMessage("Employee added successfully"), 2000);
     setFormData({ username: "", email: "", password: "", role: "Employee" });
 
   } catch (err) {
     console.error(err);
     toast.error(err.response?.data?.message || "Failed to add employee");
+  }finally{
+    setLoading(false);
   }
 };
 
@@ -84,7 +92,12 @@ export default function AddEmployee() {
             <option value="Admin">Admin</option>
           </select>
 
-          <button type="submit" className="submit-btn">Add Employee</button>
+          <button type="submit" className="submit-btn" disabled={loading}>
+  {loading ? "Adding..." : "Add Employee"}
+</button>
+{successMessage && <div className="success-message">{successMessage}</div>}
+
+
         </form>
       </div>
     </div>
