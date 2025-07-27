@@ -6,6 +6,7 @@ import { FiMail, FiLock } from "react-icons/fi";
 import loginimage from '../../assets/images/login.avif';
 import { useDispatch } from 'react-redux';
 import { signInSuccess } from  '../../redux/userSlice';
+import { Link } from 'react-router-dom';
 
 const Signin = () => {
   const navigate = useNavigate();
@@ -30,15 +31,12 @@ const Signin = () => {
       const res = await axios.post("http://localhost:5091/api/auth/login", formData);
       const { token, user } = res.data;
 
-      // ✅ Save token to localStorage
       localStorage.setItem("token", token);
 
-      // ✅ Save user info + token to Redux
       dispatch(signInSuccess({ ...user, token }));
-
-      // ✅ Redirect based on role
+     
       if (user.role === "Admin") {
-        navigate("/profile");
+        navigate("/dashboard");
       } else {
         alert("Login successful");
         navigate('/profile');
@@ -82,6 +80,9 @@ const Signin = () => {
                 onChange={handleChange}
                 required
               />
+            </div>
+            <div className="forgot-password">
+            <Link to="/reset-password">Forgot Password?</Link>
             </div>
 
             <button type="submit">Log In</button>

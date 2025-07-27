@@ -89,23 +89,18 @@ export default function MyInvitations() {
                     </span>
                   </td>
                   <td>
-                    {inv.status === "Pending" && (
-                      <>
-                        <button
-                          className="accept-btn"
-                          onClick={() => updateStatus(inv.id, "Accepted")}
-                        >
-                          Accept
-                        </button>
-                        <button
-                          className="reject-btn"
-                          onClick={() => updateStatus(inv.id, "Rejected")}
-                        >
-                          Reject
-                        </button>
-                      </>
-                    )}
-                  </td>
+  {inv.status === "Pending" && (
+    <div className="action-buttons">
+      <button className="accept-btn" onClick={() => updateStatus(inv.id, "Accepted")}>
+        Accept
+      </button>
+      <button className="reject-btn" onClick={() => updateStatus(inv.id, "Rejected")}>
+        Reject
+      </button>
+    </div>
+  )}
+</td>
+
                 </tr>
               ))}
             </tbody>

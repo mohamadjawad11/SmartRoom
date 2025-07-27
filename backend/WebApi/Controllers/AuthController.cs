@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using WebApi.Data;
 using WebApi.Models;
+using WebApi.Services;
 
 namespace WebApi.Controllers
 {
@@ -77,5 +78,79 @@ namespace WebApi.Controllers
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        [HttpPost("request-reset")]
+public async Task<IActionResult> RequestResetPassword([FromBody] EmailDto model, [FromServices] EmailService emailService)
+{
+    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+    if (user == null)
+        return NotFound(new { message = "User not found" });
+
+    // Generate 6-digit OTP
+    var otp = new Random().Next(100000, 999999).ToString();
+
+    // Save OTP to user record or a new ResetPassword table
+    user.PasswordResetCode = otp;
+    user.PasswordResetExpiry = DateTime.UtcNow.AddMinutes(10);
+    await _context.SaveChangesAsync();
+
+    string body = $"<p>Your password reset code is <strong>{otp}</strong>.</p>";
+    await emailService.SendAsync(user.Email, "Password Reset Code", body);
+
+    return Ok(new { message = "Reset code sent to email" });
+}
+
+public class EmailDto
+{
+    public string Email { get; set; }
+}
+
+[HttpPost("verify-otp")]
+public async Task<IActionResult> VerifyOtp([FromBody] OtpVerifyDto model)
+{
+    var user = await _context.Users.FirstOrDefaultAsync(u =>
+        u.Email == model.Email &&
+        u.PasswordResetCode == model.Code &&
+        u.PasswordResetExpiry > DateTime.UtcNow);
+
+    if (user == null)
+        return BadRequest(new { message = "Invalid or expired code" });
+
+    return Ok(new { message = "OTP verified" });
+}
+
+public class OtpVerifyDto
+{
+    public string Email { get; set; }
+    public string Code { get; set; }
+}
+
+[HttpPost("reset-password")]
+public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto model)
+{
+    var user = await _context.Users.FirstOrDefaultAsync(u =>
+        u.Email == model.Email &&
+        u.PasswordResetCode == model.Code &&
+        u.PasswordResetExpiry > DateTime.UtcNow);
+
+    if (user == null)
+        return BadRequest(new { message = "Invalid or expired code" });
+
+    user.Password = model.NewPassword;
+    user.PasswordResetCode = null;
+    user.PasswordResetExpiry = null;
+
+    await _context.SaveChangesAsync();
+
+    return Ok(new { message = "Password reset successful" });
+}
+
+public class ResetPasswordDto
+{
+    public string Email { get; set; }
+    public string Code { get; set; }
+    public string NewPassword { get; set; }
+}
+
     }
 }

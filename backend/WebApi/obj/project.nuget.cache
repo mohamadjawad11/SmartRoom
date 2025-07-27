@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tW0RxfHPlw0=",
+  "dgSpecHash": "leKXcd+ZuxI=",
   "success": true,
-  "projectFilePath": "C:\\Users\\jawad\\OneDrive\\Desktop\\SmartRoom\\backend\\WebApi\\WebApi.csproj",
+  "projectFilePath": "C:\\Users\\jawad\\OneDrive\\Desktop\\SmartRoom\\backend\\webApi\\WebApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\jawad\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\jawad\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

@@ -153,28 +153,23 @@ public async Task<IActionResult> DeleteRoom(int id)
 }
 
 
-     [HttpGet("search")]
+    [HttpGet("search")]
 public async Task<IActionResult> SearchRooms([FromQuery] string query)
 {
-    if (string.IsNullOrEmpty(query))
-    {
+    if (string.IsNullOrWhiteSpace(query))
         return BadRequest(new { message = "Search term is required." });
-    }
-
-    // Log the query to see if it's being received correctly
-    Console.WriteLine($"Received query: {query}");
 
     var rooms = await _context.Rooms
-        .Where(r => r.Name.Contains(query) || r.Description.Contains(query) || r.Location.Contains(query))
+        .Where(r =>
+            EF.Functions.Like(r.Name, $"%{query}%"))
         .ToListAsync();
 
     if (rooms.Count == 0)
-    {
         return NotFound(new { message = "No rooms found for the given search term." });
-    }
 
     return Ok(rooms);
 }
+
 
 
     }

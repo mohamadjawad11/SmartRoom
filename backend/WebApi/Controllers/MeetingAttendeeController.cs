@@ -169,45 +169,10 @@ public async Task<IActionResult> GetMeetingsICanJoin()
             return Ok(new { message = "Meeting started successfully." });
         }
 
-        // // Join a meeting (for attendees only)
-        // [Authorize]
-        // [HttpPost("join/{bookingId}")]
-        // public async Task<IActionResult> JoinMeeting(int bookingId)
-        // {
-        //     var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-        //     // Find the booking by ID
-        //     var booking = await _context.Bookings.FindAsync(bookingId);
-        //     if (booking == null)
-        //         return NotFound(new { message = "Booking not found." });
-
-        //     // Check if the current user is an attendee of the meeting
-        //     var attendee = await _context.MeetingAttendees
-        //         .FirstOrDefaultAsync(a => a.BookingId == bookingId && a.UserId == currentUserId);
-
-        //     if (attendee == null)
-        //         return Unauthorized(new { message = "You are not invited to this meeting." });
-
-        //     // Logic to provide a link to the meeting (this can be extended to an actual meeting link)
-        //     // For now, just return a success message with the meeting details
-        //     return Ok(new
-        //     {
-        //         message = "You can now join the meeting.",
-        //         meetingDetails = new
-        //         {
-        //             booking.Room.Name,
-        //             booking.StartTime,
-        //             booking.EndTime,
-        //             booking.Purpose
-        //         }
-        //     });
-        // }
-        [HttpPost("join/{bookingId}")]
+      [HttpPost("join/{bookingId}")]
 public async Task<IActionResult> JoinMeeting(int bookingId)
 {
     var currentUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-    Console.WriteLine($"CurrentUserId: {currentUserId}");
-    Console.WriteLine($"BookingId: {bookingId}");
 
     var booking = await _context.Bookings
         .Include(b => b.Room)
@@ -217,13 +182,21 @@ public async Task<IActionResult> JoinMeeting(int bookingId)
     if (booking == null)
         return NotFound(new { message = "Booking not found." });
 
-    // ✅ Allow access if creator or attendee
+    // ✅ Only allow if user is organizer or attendee
     if (booking.UserId != currentUserId)
     {
         var isAttendee = booking.Attendees.Any(a => a.UserId == currentUserId);
         if (!isAttendee)
             return Unauthorized(new { message = "You are not invited to this meeting." });
     }
+
+    // ✅ Only allow join if current time is within meeting duration
+    var now = DateTime.UtcNow;
+    if (now < booking.StartTime.ToUniversalTime())
+        return BadRequest(new { message = "Meeting has not started yet." });
+
+    if (now > booking.EndTime.ToUniversalTime())
+        return BadRequest(new { message = "Meeting has already ended." });
 
     return Ok(new
     {

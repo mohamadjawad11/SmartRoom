@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jawad\\OneDrive\\Desktop\\SmartRoom\\backend\\WebApi\\WebApi.csproj": {}
+    "C:\\Users\\jawad\\OneDrive\\Desktop\\SmartRoom\\backend\\webApi\\WebApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jawad\\OneDrive\\Desktop\\SmartRoom\\backend\\WebApi\\WebApi.csproj": {
+    "C:\\Users\\jawad\\OneDrive\\Desktop\\SmartRoom\\backend\\webApi\\WebApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jawad\\OneDrive\\Desktop\\SmartRoom\\backend\\WebApi\\WebApi.csproj",
+        "projectUniqueName": "C:\\Users\\jawad\\OneDrive\\Desktop\\SmartRoom\\backend\\webApi\\WebApi.csproj",
         "projectName": "WebApi",
-        "projectPath": "C:\\Users\\jawad\\OneDrive\\Desktop\\SmartRoom\\backend\\WebApi\\WebApi.csproj",
+        "projectPath": "C:\\Users\\jawad\\OneDrive\\Desktop\\SmartRoom\\backend\\webApi\\WebApi.csproj",
         "packagesPath": "C:\\Users\\jawad\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jawad\\OneDrive\\Desktop\\SmartRoom\\backend\\WebApi\\obj\\",
+        "outputPath": "C:\\Users\\jawad\\OneDrive\\Desktop\\SmartRoom\\backend\\webApi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

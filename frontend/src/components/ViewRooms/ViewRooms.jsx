@@ -26,7 +26,7 @@ const ViewRooms = () => {
 
   const handleSearch = async () => {
     if (!query.trim()) {
-      fetchAllRooms(); // fallback to all rooms
+      fetchAllRooms();
       return;
     }
 
@@ -44,6 +44,15 @@ const ViewRooms = () => {
     }
   };
 
+  // ✅ Auto search while typing with debounce
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      handleSearch();
+    }, 300);
+
+    return () => clearTimeout(timeout);
+  }, [query]);
+
   useEffect(() => {
     fetchAllRooms();
   }, []);
@@ -51,7 +60,8 @@ const ViewRooms = () => {
   if (loading) {
     return <div>Loading rooms...</div>;
   }
-if (error && rooms.length === 0) {
+
+  if (error && rooms.length === 0) {
     return <div>{error}</div>;
   }
 

@@ -6,6 +6,8 @@ import Login from "./components/SignIn/Signin.jsx";
 import AdminLogin from "./components/AdminLogic/AdminLogic.jsx";
 import AdminHome from "./components/AdminHome/AdminHome.jsx";
 import Dashboard from "./components/Dashboard/Dashboard.jsx";
+import ResetPassword from "./components/ResetPassword/ResetPassword.jsx";
+
 
 // User-related
 import Profile from "./components/Profile/Profile.jsx";
@@ -25,6 +27,8 @@ import AddRoom from "./components/AddRoom/AddRoom.jsx";
 import UpdateRoom from "./components/UpdateRoom/UpdateRoom.jsx";
 import DeleteRoom from "./components/DeleteRoom/DeleteRoom.jsx";
 import Meeting from "./components/Meeting/Meeting.jsx";
+
+import MeetingInside from "./components/MeetingInside/MeetingInside.jsx";
 
 function App() {
   return (
@@ -49,6 +53,9 @@ function App() {
         <Route path="/delete-room" element={<DeleteRoom />} />
         <Route path="/meetings" element={<Meeting />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/meeting-inside/:bookingId" element={<MeetingInside />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+
         
         
       </Routes>

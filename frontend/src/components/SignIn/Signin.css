@@ -95,3 +95,22 @@ button[type="submit"] {
 button[type="submit"]:hover {
   background-color: #009f7a;
 }
+
+.forgot-password {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -20px;
+  margin-bottom: 23px;
+}
+
+.forgot-password a {
+  color: #07a855;
+  text-decoration: none;
+  font-size: 0.855rem; 
+  transition: color 0.3s ease;
+}
+
+.forgot-password a:hover {
+  color: #15aa44;
+  text-decoration: underline;
+}

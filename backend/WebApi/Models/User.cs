@@ -8,6 +8,10 @@ namespace WebApi.Models
         public string Password { get; set; }      // Will be hashed later
         public string Role { get; set; }          // "Admin" or "Employee"
 
+        // 🔐 New fields for reset password OTP
+        public string? PasswordResetCode { get; set; }
+        public DateTime? PasswordResetExpiry { get; set; }
+
         public List<Booking> Bookings { get; set; } = new List<Booking>();
     }
 }

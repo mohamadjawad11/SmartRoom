@@ -24,7 +24,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> CreateBooking([FromBody] CreateBookingDto dto)
         {
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (userIdClaim == null) return Unauthorized(new { message = "Invalid token." });
+            if (userIdClaim == null) return Unauthorized(new { message = "User is not authenticated." });
 
             var userId = int.Parse(userIdClaim);
 
@@ -169,14 +169,14 @@ namespace WebApi.Controllers
             return Ok(new { message = "Booking updated successfully." });
         }
 
- [Authorize]
+        [Authorize]
         [HttpGet("my-created-meetings")]
         public async Task<IActionResult> GetMyCreatedMeetings()
         {
             Response.Headers.Add("Cache-Control", "no-store, no-cache, must-revalidate");
 
             var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            
+
             // Fetch bookings where the current user is the creator (userId matches)
             var createdMeetings = await _context.Bookings
                 .Where(b => b.UserId == userId)
@@ -210,6 +210,16 @@ namespace WebApi.Controllers
 
             return Ok(createdMeetings);
         }
+        
+        [Authorize]
+[HttpGet("{id}")]
+public async Task<IActionResult> GetBookingById(int id)
+{
+    var booking = await _context.Bookings.FirstOrDefaultAsync(b => b.Id == id);
+    if (booking == null) return NotFound();
+    return Ok(booking);
+}
+
 
     }
 }
